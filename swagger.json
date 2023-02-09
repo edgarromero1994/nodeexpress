@@ -1,0 +1,827 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "API para aplicación Express",
+    "version": "1.0.0",
+    "description": "Documentación de la API de la aplicación Express"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": [
+          "Autenticacion"
+        ],
+        "description": "Endpoint para iniciar sesión",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Token JWT generado con éxito",
+            "schema": {
+              "$ref": "#/definitions/Token"
+            }
+          },
+          "401": {
+            "description": "Autenticación fallida"
+          }
+        }
+      }
+    },
+    "/marca": {
+      "get": {
+        "tags": [
+          "Lista de Marca"
+        ],
+        "description": "Endpoint para obtener todas las marcas",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Datos de todas las marcas",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "nombre": {
+                    "type": "string"
+                  },
+                  "descripcion": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+            "Agregar marca"
+          ],
+          
+    "description": "Crea una nueva marca",
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+        ],
+        "parameters": [
+        {
+            "name": "marca",
+            "in": "body",
+            "description": "Marca a crear",
+            "required": true,
+            "schema": {
+                "$ref": "#/definitions/Marca"
+            }
+        }
+        ],
+        "responses": {
+        "200": {
+            "description": "Marca creada con éxito",
+            "schema": {
+                "$ref": "#/definitions/Marca"
+            }
+        }
+        }
+         }
+        },
+        "/marca/{id}": {
+          "put": {
+              "tags": [
+                  "Editar marca"
+                ],
+                "security": [
+                  {
+                    "bearerAuth": []
+                  }
+                ],
+          "description": "Edita una marca existente",
+          "consumes": [
+              "application/json"
+          ],
+          "produces": [
+              "application/json"
+          ],
+          "parameters": [
+              {
+                  "name": "id",
+                  "in": "path",
+                  "description": "ID de la marca a editar",
+                  "required": true,
+                  "type": "integer"
+              },
+              {
+                  "name": "marca",
+                  "in": "body",
+                  "description": "Datos de la marca a editar",
+                  "required": true,
+                  "schema": {
+                      "$ref": "#/definitions/Marca"
+                  }
+              }
+          ],
+          "responses": {
+              "200": {
+                  "description": "Marca editada con éxito",
+                  "schema": {
+                      "$ref": "#/definitions/Marca"
+                  }
+              },
+              "404": {
+                  "description": "Marca no encontrada"
+              }
+          }
+      
+        },
+            "delete": {
+              "tags": [
+                  "Borrar Marca"
+                ],
+                "security": [
+                  {
+                    "bearerAuth": []
+                  }
+                ],
+              "summary": "Eliminar marca por ID",
+              "parameters": [
+                {
+                  "name": "id",
+                  "in": "path",
+                  "required": true,
+                  "description": "ID de la marca a eliminar",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "Marca eliminada con éxito",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "example": "Marca eliminada con éxito"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "404": {
+                  "description": "Marca no encontrada",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "example": "Marca no encontrada"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/marca/suave/{id}": {
+            "delete": {
+              "tags": [
+                "Eliminado suave"
+              ],
+              "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "summary": "Endpoint para marcas eliminadas suavemente",
+              "description": "Este endpoint permite marcar una marca como eliminada suavemente. La marca aún estará disponible en la lista de marcas activas, pero se le ha indicado que ha sido eliminada suavemente.",
+              "parameters": [
+                {
+                  "in": "path",
+                  "name": "id",
+                  "description": "ID de la marca a ser eliminada suavemente",
+                  "required": true,
+                  "type": "integer"
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "Marca eliminada suavemente con éxito",
+                  "schema": {
+                    "$ref": "#/definitions/SuccessResponse"
+                  }
+                },
+                "404": {
+                  "description": "Marca no encontrada",
+                  "schema": {
+                    "$ref": "#/definitions/ErrorResponse"
+                  }
+                }
+              }
+            }
+          },
+          "/marca/activo": {
+            "get": {
+              "tags": [
+                "Marcas Activas"
+              ],
+              "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "summary": "Listar marcas activas",
+
+              "description": "Devuelve una lista de marcas que no han sido eliminadas suavemente",
+              "responses": {
+                "200": {
+                  "description": "Lista de marcas activas",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "description": "Identificador único de la marca"
+                            },
+                            "nombre": {
+                              "type": "string",
+                              "description": "Nombre de la marca"
+                            },
+                            "descripcion": {
+                              "type": "string",
+                              "description": "Descripción de la marca"
+                            },
+                            "eliminado_suave": {
+                              "type": "boolean",
+                              "description": "Indicador de si la marca ha sido eliminada suavemente o no"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/linea": {
+            "get": {
+    
+          "tags": [
+            "Lista de Linea"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+            "description": "Obtiene una lista de todas las marcas",
+            "produces": [
+                "application/json"
+            ],
+            "responses": {
+                "200": {
+                    "description": "Lista de Lineas",
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/Linea"
+                        }
+                    }
+                }
+             }
+            },
+            "post": {
+                "tags": [
+                    "Agregar linea"
+                  ],
+                  "security": [
+                    {
+                      "bearerAuth": []
+                    }
+                  ],
+            "description": "Crea una nueva linea",
+            "consumes": [
+                "application/json"
+            ],
+            "produces": [
+                "application/json"
+                ],
+                "parameters": [
+                {
+                    "name": "linea",
+                    "in": "body",
+                    "description": "Linea a linea",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/Linea"
+                    }
+                }
+                ],
+                "responses": {
+                "200": {
+                    "description": "Linea creada con éxito",
+                    "schema": {
+                        "$ref": "#/definitions/linea"
+                    }
+                }
+                }
+                 }
+            },
+
+            "/linea/{id}": {
+              "put": {
+                  "tags": [
+                      "Editar linea"
+                    ],
+                    "security": [
+                      {
+                        "bearerAuth": []
+                      }
+                    ],
+              "description": "Edita una linea existente",
+              "consumes": [
+                  "application/json"
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "parameters": [
+                  {
+                      "name": "id",
+                      "in": "path",
+                      "description": "ID de la linea a editar",
+                      "required": true,
+                      "type": "integer"
+                  },
+                  {
+                      "name": "linea",
+                      "in": "body",
+                      "description": "Datos de la linea a editar",
+                      "required": true,
+                      "schema": {
+                          "$ref": "#/definitions/Linea"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Linea editada con éxito",
+                      "schema": {
+                          "$ref": "#/definitions/Linea"
+                      }
+                  },
+                  "404": {
+                      "description": "Linea no encontrada"
+                  }
+              }
+          
+            },
+                "delete": {
+                  "tags": [
+                      "Eliminar Linea"
+                    ],
+                    "security": [
+                      {
+                        "bearerAuth": []
+                      }
+                    ],
+                  "summary": "Eliminar linea por ID",
+                  "parameters": [
+                    {
+                      "name": "id",
+                      "in": "path",
+                      "required": true,
+                      "description": "ID de la linea a eliminar",
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  ],
+                  "responses": {
+                    "200": {
+                      "description": "Linea eliminada con éxito",
+                      "content": {
+                        "application/json": {
+                          "schema": {
+                            "type": "object",
+                            "properties": {
+                              "message": {
+                                "type": "string",
+                                "example": "Linea eliminada con éxito"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "404": {
+                      "description": "Linea no encontrada",
+                      "content": {
+                        "application/json": {
+                          "schema": {
+                            "type": "object",
+                            "properties": {
+                              "message": {
+                                "type": "string",
+                                "example": "Linea no encontrada"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "/linea/suave/{id}": {
+                "delete": {
+                  "tags": [
+                    "Eliminar linea suavemente"
+                  ],
+                  "security": [
+                    {
+                      "bearerAuth": []
+                    }
+                  ],
+                  "summary": "Endpoint para lineas eliminadas suavemente",
+                  "description": "Este endpoint permite marcar una linea como eliminada suavemente. La linea aún estará disponible en la lista de marcas activas, pero se le ha indicado que ha sido eliminada suavemente.",
+                  "parameters": [
+                    {
+                      "in": "path",
+                      "name": "id",
+                      "description": "ID de la linea a ser eliminada suavemente",
+                      "required": true,
+                      "type": "integer"
+                    }
+                  ],
+                  "responses": {
+                    "200": {
+                      "description": "Marca eliminada suavemente con éxito",
+                      "schema": {
+                        "$ref": "#/definitions/SuccessResponse"
+                      }
+                    },
+                    "404": {
+                      "description": "Linea no encontrada",
+                      "schema": {
+                        "$ref": "#/definitions/ErrorResponse"
+                      }
+                    }
+                  }
+                }
+              },
+              "/linea/activo": {
+                "get": {
+                  "tags": [
+                    "Linea Activas"
+                  ],
+                  "security": [
+                    {
+                      "bearerAuth": []
+                    }
+                  ],
+                  "summary": "Listar lineas activas",
+    
+                  "description": "Devuelve una lista de lineas que no han sido eliminadas suavemente",
+                  "responses": {
+                    "200": {
+                      "description": "Lista de lineas activas",
+                      "content": {
+                        "application/json": {
+                          "schema": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "integer",
+                                  "description": "Identificador único de la linea"
+                                },
+                                "nombre": {
+                                  "type": "string",
+                                  "description": "Nombre de la linea"
+                                },
+                                "descripcion": {
+                                  "type": "string",
+                                  "description": "Descripción de la linea"
+                                },
+                                "eliminado_suave": {
+                                  "type": "boolean",
+                                  "description": "Indicador de si la linea ha sido eliminada suavemente o no"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "/products": {
+                "get": {
+                  "tags": [
+                      "Listado de productos "
+                    ],
+                    "security": [
+                      {
+                        "bearerAuth": []
+                      }
+                    ],
+                    "summary": "Obtiene una lista de todos los productos",
+                    "responses": {
+                        "200": {
+                            "description": "Lista de productos",
+                            
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/Product"
+                                }
+                            }
+                        }
+                    }
+                },
+                "post": {
+                  "tags": [
+                      "Agregar nuevos productos"
+                    ],
+                    "security": [
+                      {
+                        "bearerAuth": []
+                      }
+                    ],
+                    "summary": "Agrega un nuevo producto a la lista",
+                    "parameters": [
+                        {
+                            "in": "body",
+                            "name": "product",
+                            "description": "Información del producto",
+                            "required": true,
+                            "schema": {
+                                "$ref": "#/definitions/Product"
+                            }
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Producto agregado correctamente",
+                            "schema": {
+                                "$ref": "#/definitions/Product"
+                            }
+                        }
+                    }
+                }
+            },
+            "/products/{id}": {
+              "put": {
+                  "tags": [
+                      "Editar producto"
+                    ],
+
+                    "security": [
+                      {
+                        "bearerAuth": []
+                      }
+                    ],
+                       
+              "description": "Edita una un producto existente",
+              "consumes": [
+                  "application/json"
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "parameters": [
+                  {
+                      "name": "id",
+                      "in": "path",
+                      "description": "ID del producto a editar",
+                      "required": true,
+                      "type": "integer"
+                  },
+                  {
+                      "name": "product",
+                      "in": "body",
+                      "description": "Datos de producto a editar",
+                      "required": true,
+                      "schema": {
+                          "$ref": "#/definitions/Product"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Producto editada con éxito",
+                      "schema": {
+                          "$ref": "#/definitions/Product"
+                      }
+                  },
+                  "404": {
+                      "description": "Producto no encontrada"
+                  }
+              }
+            },
+            "delete": {
+              "tags": [
+                  "Eliminar productos"
+                ],
+                "security": [
+                  {
+                    "bearerAuth": []
+                  }
+                ],
+                "summary": "Elimina un producto existente por su ID",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "ID del producto",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Producto eliminado correctamente"
+                    },
+                    "404": {
+                        "description": "Producto no encontrado"
+                    }
+                }
+            }
+            },
+            "/products/compra/{id}": {
+              "put": {
+                "tags": [
+                  "Realizar una Venta"
+                ],
+                "security": [
+                  {
+                    "bearerAuth": []
+                  }
+                ],
+
+                  "description": "Realizar una venta",
+                  "parameters": [
+                      {
+                          "in": "path",
+                          "name": "id",
+                          "required": true,
+                          "type": "integer"
+                      },
+                      {
+                          "in": "body",
+                          "name": "body",
+                          "required": true,
+                          "schema": {
+                              "type": "object",
+                              "properties": {
+                                  "cantidadComprada": {
+                                      "type": "integer",
+                                      "description": "La cantidad de productos a comprar"
+                                  }
+                              }
+                          }
+                      }
+                  ],
+                  "responses": {
+                      "200": {
+                          "description": "OK",
+                          "schema": {
+                              "$ref": "#/definitions/Product"
+                          }
+                      },
+                      "404": {
+                          "description": "Producto no encontrado"
+                      }
+                  }
+              }
+            },
+            "/products/existencia": {
+              "get": {
+                "tags": [
+                  "Producto en existencia"
+                ],
+                "security": [
+                  {
+                    "bearerAuth": []
+                  }
+                ],
+                "description": "Obtiene una lista de productos con existencia en el inventario",
+                "responses": {
+                  "200": {
+                    "description": "Lista de productos con existencia en el inventario",
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "description": "ID del producto"
+                          },
+                          "nombre": {
+                            "type": "string",
+                            "description": "Nombre del producto"
+                          },
+                          "cantidad": {
+                            "type": "integer",
+                            "description": "Cantidad de productos en el inventario"
+                          },
+                          "precio": {
+                            "type": "number",
+                            "description": "Precio del producto"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+                 
+  },
+  "definitions": {
+    "Token": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    
+    "Marca": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "nombre": {
+          "type": "string"
+        },
+        "descripcion": {
+          "type": "string"
+        }
+      }
+    },
+    "Marpost": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "nombre": {
+          "type": "string"
+        },
+        "descripcion": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "bearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  }
+}  
+  
+
+
+
